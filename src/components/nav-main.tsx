@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react"
+import { ChevronRight } from "lucide-react";
 
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+} from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -16,49 +16,58 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import { reactCourse } from "@/data/react-course";
+import { Checkbox } from "./ui/checkbox";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    title: string
-    url: string
-    icon?: LucideIcon
-    isActive?: boolean
-    items?: {
-      title: string
-      url: string
-    }[]
-  }[]
-}) {
+export function NavMain() {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>Sections</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
+        {reactCourse.sections.map((section) => (
           <Collapsible
-            key={item.title}
+            key={section.title}
             asChild
-            defaultOpen={item.isActive}
             className="group/collapsible"
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                <SidebarMenuButton tooltip={section.title}>
+                  {section.icon && <section.icon />}
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger className="truncate">
+                        <span>{section.title}</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{section.title}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <SidebarMenuSub>
-                  {item.items?.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.title}>
+                  {section.videos?.map((video) => (
+                    <SidebarMenuSubItem key={video.title}>
                       <SidebarMenuSubButton asChild>
-                        <a href={subItem.url}>
-                          <span>{subItem.title}</span>
-                        </a>
+                        <div className="gap-2">
+                          <Checkbox />
+                          <p className="text-xs max-h-9 overflow-hidden flex-1">
+                            {video.title}
+                          </p>
+                          <span className="text-xs text-gray-400">
+                            {video.duration}
+                          </span>
+                        </div>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}
@@ -69,5 +78,5 @@ export function NavMain({
         ))}
       </SidebarMenu>
     </SidebarGroup>
-  )
+  );
 }
